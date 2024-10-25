@@ -69,6 +69,10 @@ vim.opt.scrolloff = 10
 -- recomended by avante.nvim
 vim.opt.laststatus = 3
 
+-- set filetype plugin indent on with lua
+vim.cmd [[filetype plugin indent on]]
+vim.cmd [[set autoindent]]
+
 -- go to previous/next line with h,l,left arrow and right arrow
 -- when cursor reaches end/beginning of line
 vim.opt.whichwrap:append '<>[]hl'

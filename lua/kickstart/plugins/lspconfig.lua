@@ -179,6 +179,7 @@ return {
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         ts_ls = {},
         eslint = {},
+        tailwindcss = {},
         jsonls = {},
         html = {},
 
@@ -214,6 +215,7 @@ return {
         'ts_ls',
         'prettierd',
         'eslint',
+        'tailwindcss',
         'jsonls',
         'html',
         'markdownlint',

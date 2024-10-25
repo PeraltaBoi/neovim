@@ -1,3 +1,14 @@
+local source_mapping = {
+  nvim_lsp = '[LSP]',
+  nvim_lua = '[LUA]',
+  luasnip = '[SNIP]',
+  buffer = '[BUF]',
+  path = '[PATH]',
+  treesitter = '[TREE]',
+  ['vim-dadbod-completion'] = '[DB]',
+  dap = '[DAP]',
+}
+
 local cmp_kinds = {
   Text = '',
   Method = '',
@@ -75,9 +86,9 @@ return {
     config = function()
       -- See `:help cmp`
       local cmp = require 'cmp'
-      local tailwindcss_colorizer_cmp = require 'tailwindcss-colorizer-cmp'
       local lspkind = require 'lspkind'
       local luasnip = require 'luasnip'
+      local cmp_tailwind = require 'tailwindcss-colorizer-cmp'
       luasnip.config.setup {}
 
       cmp.setup {
@@ -147,24 +158,6 @@ return {
             end
           end, { 'i', 's' }),
 
-          -- Copilot shenanigans
-          ['<Tab>'] = cmp.mapping(function(fallback)
-            if require('copilot.suggestion').is_visible() then
-              require('copilot.suggestion').accept()
-            elseif cmp.visible() then
-              cmp.select_next_item { behavior = cmp.SelectBehavior.Insert }
-            elseif luasnip.expandable() then
-              luasnip.expand()
-            elseif has_words_before() then
-              cmp.complete()
-            else
-              fallback()
-            end
-          end, {
-            'i',
-            's',
-          }),
-
           -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
           --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
         },
@@ -174,52 +167,83 @@ return {
             -- set group index to 0 to skip loading LuaLS completions as lazydev recommends it
             group_index = 0,
           },
-          { name = 'nvim_lsp' },
-          { name = 'luasnip' },
+          { name = 'copilot', group_index = 2 },
+          { name = 'nvim_lsp', group_index = 2 },
+          { name = 'luasnip', group_index = 2 },
+          { name = 'buffer', group_index = 2 },
+          { name = 'treesitter', group_index = 2 },
           { name = 'path' },
         },
+        performance = {
+          debounce = 0,
+          throttle = 0,
+          fetching_timeout = 200,
+          confirm_resolve_timeout = 1,
+          async_budget = 1,
+          max_view_entries = 100,
+        },
         window = {
-          completion = {
-            border = 'rounded', -- single|rounded|none
-            -- custom colors
-            winhighlight = 'Normal:Normal,FloatBorder:FloatBorder,CursorLine:CursorLineBG,Search:None', -- BorderBG|FloatBorder
-            -- side_padding = settings.cmp_style == 'default' and 1 or 0, -- padding at sides
-            -- col_offset = settings.cmp_style == 'default' and -1 or -4, -- move floating box left or right
-            side_padding = 0,
-            col_offset = 0,
-          },
-          documentation = {
-            border = 'rounded', -- single|rounded|none
-            -- custom colors
-            winhighlight = 'Normal:Normal,FloatBorder:FloatBorder,CursorLine:CursorLineBG,Search:None', -- BorderBG|FloatBorder
-          },
+          completion = cmp.config.window.bordered(),
+          documentation = cmp.config.window.bordered(),
         },
+        view = {
+          entries = {
+            name = 'custom',
+            selection_order = 'near_cursor',
+            follow_cursor = true,
+          },
+        }, ---@diagnostic disable-next-line: missing-fields
         formatting = {
-          fields = { 'kind', 'abbr', 'menu' },
-          format = function(entry, item)
-            -- vscode like icons for cmp autocompletion
-            local kind_fmt = lspkind.cmp_format {
-              -- with_text = false, -- hide kind beside the icon
-              mode = 'symbol_text',
-              maxwidth = 50,
-              ellipsis_char = '...',
-              before = tailwindcss_colorizer_cmp.formatter, -- prepend tailwindcss-colorizer
-            }(entry, item)
-
-            -- customize lspkind format
-            local strings = vim.split(kind_fmt.kind, '%s', { trimempty = true })
-
-            if true then
-              kind_fmt.kind = ' ' .. (strings[1] or '') .. ' ' -- default icons
-            else
-              kind_fmt.kind = '  ' .. (cmp_kinds[strings[2]] or '') .. ' ' -- vscode like icons
-            end
-
-            kind_fmt.menu = strings[2] ~= nil and (' ' .. (strings[2] or '')) or ''
-
-            return kind_fmt
-          end,
+          format = lspkind.cmp_format {
+            mode = 'symbol_text',
+            symbol_map = { Copilot = '' },
+            ellipsis_char = '...',
+            before = function(entry, vim_item)
+              cmp_tailwind.formatter(entry, vim_item)
+              return vim_item
+            end,
+            menu = source_mapping,
+          },
         },
+        sorting = {
+          priority_weight = 2,
+          comparators = {
+            require('copilot_cmp.comparators').prioritize,
+            cmp.config.compare.offset,
+            cmp.config.compare.exact,
+            cmp.config.compare.score,
+            cmp.config.compare.recently_used,
+            cmp.config.compare.kind,
+            cmp.config.compare.sort_text,
+            cmp.config.compare.length,
+            cmp.config.compare.order,
+          },
+        }, -- formatting = {
+        --   fields = { 'kind', 'abbr', 'menu' },
+        --   format = function(entry, item)
+        --     -- vscode like icons for cmp autocompletion
+        --     local kind_fmt = lspkind.cmp_format {
+        --       -- with_text = false, -- hide kind beside the icon
+        --       mode = 'symbol_text',
+        --       maxwidth = 50,
+        --       ellipsis_char = '...',
+        --       before = tailwindcss_colorizer_cmp.formatter, -- prepend tailwindcss-colorizer
+        --     }(entry, item)
+        --
+        --     -- customize lspkind format
+        --     local strings = vim.split(kind_fmt.kind, '%s', { trimempty = true })
+        --
+        --     if true then
+        --       kind_fmt.kind = ' ' .. (strings[1] or '') .. ' ' -- default icons
+        --     else
+        --       kind_fmt.kind = '  ' .. (cmp_kinds[strings[2]] or '') .. ' ' -- vscode like icons
+        --     end
+        --
+        --     kind_fmt.menu = strings[2] ~= nil and (' ' .. (strings[2] or '')) or ''
+        --
+        --     return kind_fmt
+        --   end,
+        -- },
       }
     end,
   },

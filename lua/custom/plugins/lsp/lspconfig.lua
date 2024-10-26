@@ -180,8 +180,16 @@ return {
         ts_ls = {},
         eslint = {},
         tailwindcss = {},
+        svelte = {},
+        gopls = {},
         jsonls = {},
         html = {},
+
+        pyright = {},
+        ruff = {},
+
+        clangd = {},
+        rust_analyzer = {},
 
         lua_ls = {
           -- cmd = {...},
@@ -216,6 +224,8 @@ return {
         'prettierd',
         'eslint',
         'tailwindcss',
+        'svelte',
+        'gopls',
         'jsonls',
         'html',
         'markdownlint',

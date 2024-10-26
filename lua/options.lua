@@ -4,7 +4,7 @@
 --  For more options, you can see `:help option-list`
 
 -- Set tab size
-vim.opt.tabstop = 4
+vim.opt.tabstop = 2
 
 -- Make line numbers default
 vim.opt.number = true

@@ -91,12 +91,23 @@ return {
       local cmp_tailwind = require 'tailwindcss-colorizer-cmp'
       luasnip.config.setup {}
 
+      require('CopilotChat.integrations.cmp').setup()
+      require('CopilotChat').setup {
+        mappings = {
+          complete = {
+            insert = '',
+          },
+        },
+        -- rest of your config
+      }
+
       cmp.setup {
         snippet = {
           expand = function(args)
             luasnip.lsp_expand(args.body)
           end,
         },
+        preselect = 'None',
         completion = { completeopt = 'menu,menuone,noinsert,noselect,preview' },
 
         -- For an understanding of why these mappings were

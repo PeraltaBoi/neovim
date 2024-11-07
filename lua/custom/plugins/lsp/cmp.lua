@@ -92,14 +92,6 @@ return {
       luasnip.config.setup {}
 
       require('CopilotChat.integrations.cmp').setup()
-      require('CopilotChat').setup {
-        mappings = {
-          complete = {
-            insert = '',
-          },
-        },
-        -- rest of your config
-      }
 
       cmp.setup {
         snippet = {

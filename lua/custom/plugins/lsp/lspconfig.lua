@@ -191,6 +191,10 @@ return {
         clangd = {},
         rust_analyzer = {},
 
+        hyprls = {
+          filetypes = { 'hypr*.conf' },
+        },
+
         lua_ls = {
           -- cmd = {...},
           -- filetypes = { ...},

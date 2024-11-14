@@ -6,7 +6,7 @@ return {
       options = {
         icons_enabled = true,
         -- theme = 'auto',
-        theme = 'catppuccin',
+        theme = 'kanagawa',
         component_separators = { left = '', right = '' },
         -- section_separators = { left = '', right = '' },
         section_separators = { left = '', right = '' },

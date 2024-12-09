@@ -91,8 +91,6 @@ return {
       local cmp_tailwind = require 'tailwindcss-colorizer-cmp'
       luasnip.config.setup {}
 
-      require('CopilotChat.integrations.cmp').setup()
-
       cmp.setup {
         snippet = {
           expand = function(args)

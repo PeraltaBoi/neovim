@@ -98,7 +98,7 @@ return {
           end,
         },
         preselect = 'None',
-        completion = { completeopt = 'menu,menuone,noinsert,noselect,preview' },
+        completion = { completeopt = 'menu,menuone,noinsert,noselect,preview,popup' },
 
         -- For an understanding of why these mappings were
         -- chosen, you will need to read `:help ins-completion`

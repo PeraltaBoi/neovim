@@ -79,3 +79,5 @@ vim.cmd [[set autoindent]]
 -- go to previous/next line with h,l,left arrow and right arrow
 -- when cursor reaches end/beginning of line
 vim.opt.whichwrap:append '<>[]hl'
+
+vim.cmd [[let g:zig_fmt_autosave = 0]]

@@ -190,6 +190,7 @@ return {
 
         clangd = {},
         rust_analyzer = {},
+        zls = {},
 
         hyprls = {
           filetypes = { 'hypr*.conf' },
@@ -233,6 +234,7 @@ return {
         'jsonls',
         'html',
         'markdownlint',
+        'zls',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 

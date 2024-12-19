@@ -58,6 +58,7 @@ require('lazy').setup({
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
   { import = 'custom.plugins' },
   { import = 'custom.plugins.database' },
+  { import = 'custom.plugins.debug' },
   { import = 'custom.plugins.lsp' },
   { import = 'custom.plugins.llm' },
   { import = 'custom.plugins.git' },

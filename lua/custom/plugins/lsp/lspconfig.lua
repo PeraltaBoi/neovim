@@ -196,8 +196,12 @@ return {
         rust_analyzer = {},
         zls = {},
 
+        -- hyprls = {
+        --   filetypes = { 'hypr*.conf' },
+        -- },
+
         hyprls = {
-          filetypes = { 'hypr*.conf' },
+          filetypes = { 'hyprland', 'hyprlang' },
         },
 
         lua_ls = {
